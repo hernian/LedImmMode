@@ -1,0 +1,10 @@
+*.pdb
+*.ilk
+*.exp
+*.obj
+*.tlog
+*.log
+**/*.idb
+**/Debug/**
+**/Relase/**
+LedImmMode.VC.db
