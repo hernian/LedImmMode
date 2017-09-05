@@ -61,21 +61,26 @@ namespace LedImmMode
             }
             else if (m.Msg == 0x401)
             {
-                var open = m.WParam.ToInt32();
-                var conv = (UInt32)m.LParam.ToInt32();
-                if (this.Visible)
-                {
-                    var msg = string.Format("WM_USER + 1: open:{0} conv:{1:x8}\r\n", open, conv);
-                    AddLog(msg);
-                }
-                bool blue = (conv == 0x19);
-                bool green = (conv == 0x1b);
-                bool yellow = false;
-                bool red = (conv != 0x19) && (conv != 0x1b) && (conv != 0x00);
-                ledController.SetLed(blue, green, yellow, red);
+                HandleImmState(m);
                 return;
             }
             base.WndProc(ref m);
+        }
+
+        private async void HandleImmState(Message m)
+        {
+            var open = m.WParam.ToInt32();
+            var conv = (UInt32)m.LParam.ToInt32();
+            if (this.Visible)
+            {
+                var msg = string.Format("WM_USER + 1: open:{0} conv:{1:x8}\r\n", open, conv);
+                AddLog(msg);
+            }
+            bool blue = (conv == 0x19);
+            bool green = (conv == 0x1b);
+            bool yellow = false;
+            bool red = (conv != 0x19) && (conv != 0x1b) && (conv != 0x00);
+            await ledController.SetLedAsync(blue, green, yellow, red);
         }
 
         private void button1_Click(object sender, EventArgs e)
